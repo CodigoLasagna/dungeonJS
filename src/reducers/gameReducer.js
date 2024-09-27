@@ -103,7 +103,7 @@ function getValidPos(dungeon){
 }
 
 const gameReducer = (state = initialState, action) => {
-	const { playerPosition, dungeon, baseDungeonParams } = state;
+	const { playerPosition, coins, dungeon, baseDungeonParams } = state;
 	switch (action.type) {
 		case 'GENERATE_DUNGEON':
 			//asignamos los valores predeterminados para la dungeon
