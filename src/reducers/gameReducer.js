@@ -9,23 +9,23 @@ function generateDungeon(width, height, cellSize) {
 	const dungeon = Array.from({ length: height * cellSize }, () =>
 		Array.from({ length: width * cellSize }, () => '#')
 	);
-
+	
 	const rooms = [];
-
+	
 	for (let i = 0; i < height; i++) {
 		for (let j = 0; j < width; j++) {
 			const roomWidth = Math.floor(Math.random() * (cellSize - 2)) + 2; 
 			const roomHeight = Math.floor(Math.random() * (cellSize - 2)) + 2;
-
+			
 			const startX = j * cellSize + Math.floor(Math.random() * (cellSize - roomWidth));
 			const startY = i * cellSize + Math.floor(Math.random() * (cellSize - roomHeight));
-
+			
 			// Verificar que la habitación no sobresalga de los límites del dungeon
 			let canPlaceRoom = true;
 			if (startX < 1 || startY < 1 || startX + roomWidth >= width * cellSize - 1 || startY + roomHeight >= height * cellSize - 1) {
 				canPlaceRoom = false;
 			}
-
+			
 			for (let y = startY; y < startY + roomHeight; y++) {
 				for (let x = startX; x < startX + roomWidth; x++) {
 					if (dungeon[y][x] !== '#') {
@@ -33,7 +33,7 @@ function generateDungeon(width, height, cellSize) {
 					}
 				}
 			}
-
+			
 			if (canPlaceRoom) {
 				// Crear la habitación
 				for (let y = startY; y < startY + roomHeight; y++) {
@@ -46,12 +46,12 @@ function generateDungeon(width, height, cellSize) {
 			}
 		}
 	}
-
+	
 	// Crear pasillos entre habitaciones
 	for (let i = 0; i < rooms.length - 1; i++) {
 		const startRoom = rooms[i];
 		const endRoom = rooms[i + 1];
-
+		
 		// Conectar habitaciones horizontalmente y verticalmente
 		if (Math.random() > 0.5) {
 			// Horizontal primero, luego vertical
@@ -71,7 +71,7 @@ function generateDungeon(width, height, cellSize) {
 			}
 		}
 	}
-
+	
 	return dungeon;
 }
 
@@ -112,7 +112,7 @@ const gameReducer = (state = initialState, action) => {
 			else if (action.payload === 'LEFT' && x > 0) newPos.x--;
 			else if (action.payload === 'RIGHT' && x < dungeon[0].length - 1) newPos.x++;
 			else validMove = false
-
+			
 			if (dungeon[newPos.y][newPos.x] === '#'){
 				validMove = false;
 				newPos = prevPos;

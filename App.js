@@ -10,6 +10,14 @@ const rl = readline.createInterface({
 	terminal: true,
 });
 
+// Colores ANSI
+const colors = {
+	RESET: '\x1b[0m',
+	PLAYER: '\x1b[1;32m',
+	WALL: '\x1b[1;30m',
+	FLOOR: '\x1b[30m'
+};
+
 //función para mostrar el juego en la terminal
 
 const renderDungeon = () => {
@@ -30,9 +38,9 @@ const renderDungeon = () => {
 	const updatedDungeon = dungeon.map((row, rowIndex) =>
 		row.map((cell, colIndex) => {
 			if (rowIndex === playerPosition.y && colIndex === playerPosition.x) {
-				return '@'; // Representa al jugador
+				return `${colors.PLAYER}@${colors.RESET}`; // Representa al jugador
 			}
-			return cell; // Retorna el resto de las celdas como están
+			return cell === '#' ? `${colors.WALL}#${colors.RESET}` : `${colors.FLOOR}.${colors.RESET}`; // Retorna el resto de las celdas como están
 		})
 	);
 
@@ -50,7 +58,6 @@ const handleInput = (key) => {
 	if (key === 'a') store.dispatch(movePlayer('LEFT'));
 	if (key === 'd') store.dispatch(movePlayer('RIGHT'));
 	if (key === 'q') {
-		console.log("bye bye");
 		process.exit();
 	}
 	renderDungeon();
@@ -58,7 +65,7 @@ const handleInput = (key) => {
 
 // inicializar juego y esperar inputs
 console.clear();
-store.dispatch(generateDungeonAction(8, 8, 6));
+store.dispatch(generateDungeonAction(5, 5, 6));
 renderDungeon();
 
 rl.input.on('keypress', (_, key) =>{
