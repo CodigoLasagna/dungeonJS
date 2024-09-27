@@ -1,6 +1,6 @@
 const readline = require('readline');
 const store = require('./src/store');
-const { movePlayer } = require('./src/actions/gameActions');
+const { movePlayer, generateDungeonAction } = require('./src/actions/gameActions');
 
 //configurar input para la terminal (readline es necesario o si no sería hacer un juego por comandos)
 // y no en tiempo "real"
@@ -20,6 +20,10 @@ const renderDungeon = () => {
 		return;
 	}
 	const dungeon = state.game.dungeon;
+	if (!Array.isArray(dungeon)){
+		console.error("El dungeon no es un arreglo");
+		return
+	}
 	dungeon.forEach((row) => {
 		console.log(row.join(' '));
 	});
@@ -41,6 +45,7 @@ const handleInput = (key) => {
 
 // inicializar juego y esperar inputs
 console.clear();
+store.dispatch(generateDungeonAction(8, 8, 5));
 renderDungeon();
 
 rl.input.on('keypress', (_, key) =>{
