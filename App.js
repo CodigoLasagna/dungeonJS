@@ -2,8 +2,7 @@ const readline = require('readline');
 const store = require('./src/store');
 const { movePlayer, generateDungeonAction } = require('./src/actions/gameActions');
 
-//configurar input para la terminal (readline es necesario o si no sería hacer un juego por comandos)
-// y no en tiempo "real"
+// Configurar input para la terminal
 const rl = readline.createInterface({
 	input: process.stdin,
 	output: process.stdout,
@@ -18,8 +17,7 @@ const colors = {
 	FLOOR: '\x1b[30m'
 };
 
-//función para mostrar el juego en la terminal
-
+// Función para mostrar el juego en la terminal
 const renderDungeon = () => {
 	const state = store.getState();
 	if (!state.game) {
@@ -40,7 +38,7 @@ const renderDungeon = () => {
 			if (rowIndex === playerPosition.y && colIndex === playerPosition.x) {
 				return `${colors.PLAYER}@${colors.RESET}`; // Representa al jugador
 			}
-			return cell === '#' ? `${colors.WALL}#${colors.RESET}` : `${colors.FLOOR}.${colors.RESET}`; // Retorna el resto de las celdas como están
+			return cell === '#' ? `${colors.WALL}#${colors.RESET}` : `${colors.FLOOR}.${colors.RESET}`; // Retorna el resto de las celdas
 		})
 	);
 
@@ -48,10 +46,10 @@ const renderDungeon = () => {
 	updatedDungeon.forEach((row) => {
 		console.log(row.join(' '));
 	});
-	console.log('Usa WASD para moverte, presiona Q para salir.');
+	console.log('Usa WASD para moverte, presiona S para generar un nuevo mapa, presiona Q para salir.');
 }
 
-// función para manejar las teclas del jugador
+// Función para manejar las teclas del jugador
 const handleInput = (key) => {
 	if (key === 'w') store.dispatch(movePlayer('UP'));
 	if (key === 's') store.dispatch(movePlayer('DOWN'));
@@ -60,15 +58,19 @@ const handleInput = (key) => {
 	if (key === 'q') {
 		process.exit();
 	}
+	if (key === 'r') {
+		// Generar un nuevo mapa al presionar '5'
+		store.dispatch(generateDungeonAction(5, 5, 6));
+	}
 	renderDungeon();
 }
 
-// inicializar juego y esperar inputs
+// Inicializar juego y esperar inputs
 console.clear();
 store.dispatch(generateDungeonAction(5, 5, 6));
 renderDungeon();
 
-rl.input.on('keypress', (_, key) =>{
+rl.input.on('keypress', (_, key) => {
 	console.clear();
 	handleInput(key.name);
 });
