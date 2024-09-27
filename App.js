@@ -14,20 +14,33 @@ const rl = readline.createInterface({
 
 const renderDungeon = () => {
 	const state = store.getState();
-	//console.log('estado actual', state);
-	if (!state.game){
+	if (!state.game) {
 		console.error("Estado indefinido");
 		return;
 	}
 	const dungeon = state.game.dungeon;
-	if (!Array.isArray(dungeon)){
+	const playerPosition = state.game.playerPosition;
+
+	if (!Array.isArray(dungeon)) {
 		console.error("El dungeon no es un arreglo");
-		return
+		return;
 	}
-	dungeon.forEach((row) => {
+
+	// Dibuja el dungeon y el jugador
+	const updatedDungeon = dungeon.map((row, rowIndex) =>
+		row.map((cell, colIndex) => {
+			if (rowIndex === playerPosition.y && colIndex === playerPosition.x) {
+				return '@'; // Representa al jugador
+			}
+			return cell; // Retorna el resto de las celdas como están
+		})
+	);
+
+	// Imprime el dungeon en la consola
+	updatedDungeon.forEach((row) => {
 		console.log(row.join(' '));
 	});
-	console.log('Usa WASD para moverte presiona Q para salir.');
+	console.log('Usa WASD para moverte, presiona Q para salir.');
 }
 
 // función para manejar las teclas del jugador
@@ -45,7 +58,7 @@ const handleInput = (key) => {
 
 // inicializar juego y esperar inputs
 console.clear();
-store.dispatch(generateDungeonAction(8, 8, 5));
+store.dispatch(generateDungeonAction(8, 8, 6));
 renderDungeon();
 
 rl.input.on('keypress', (_, key) =>{
