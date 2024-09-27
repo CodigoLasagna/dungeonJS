@@ -14,7 +14,8 @@ const colors = {
 	RESET: '\x1b[0m',
 	PLAYER: '\x1b[1;32m',
 	WALL: '\x1b[1;30m',
-	FLOOR: '\x1b[30m'
+	FLOOR: '\x1b[30m',
+	COIN: '\x1b[1;33m'
 };
 
 // Función para mostrar el juego en la terminal
@@ -38,7 +39,8 @@ const renderDungeon = () => {
 			if (rowIndex === playerPosition.y && colIndex === playerPosition.x) {
 				return `${colors.PLAYER}@${colors.RESET}`; // Representa al jugador
 			}
-			return cell === '#' ? `${colors.WALL}#${colors.RESET}` : `${colors.FLOOR}.${colors.RESET}`; // Retorna el resto de las celdas
+			return cell === '#' ? `${colors.WALL}#${colors.RESET}` : 
+				(cell === 'o' ? `${colors.COIN}o${colors.RESET}` : `${colors.FLOOR}.${colors.RESET}`);
 		})
 	);
 
@@ -46,8 +48,10 @@ const renderDungeon = () => {
 	updatedDungeon.forEach((row) => {
 		console.log(row.join(' '));
 	});
-	console.log('Usa WASD para moverte, presiona S para generar un nuevo mapa, presiona Q para salir.');
+	console.log('Score: ', state.game.coins);
+	console.log('Usa WASD para moverte, presiona Q para salir.');
 }
+const baseDungeonParams = [4, 4, 6];
 
 // Función para manejar las teclas del jugador
 const handleInput = (key) => {
@@ -59,15 +63,15 @@ const handleInput = (key) => {
 		process.exit();
 	}
 	if (key === 'r') {
-		// Generar un nuevo mapa al presionar '5'
-		store.dispatch(generateDungeonAction(5, 5, 6));
+		// Generar un nuevo mapa al presionar 'r'
+		store.dispatch(generateDungeonAction(baseDungeonParams[0], baseDungeonParams[1], baseDungeonParams[2]));
 	}
 	renderDungeon();
 }
 
 // Inicializar juego y esperar inputs
 console.clear();
-store.dispatch(generateDungeonAction(5, 5, 6));
+store.dispatch(generateDungeonAction(baseDungeonParams[0], baseDungeonParams[1], baseDungeonParams[2]));
 renderDungeon();
 
 rl.input.on('keypress', (_, key) => {
